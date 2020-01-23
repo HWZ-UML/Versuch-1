@@ -1,16 +1,17 @@
 package fahrzeuginfo;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class Automanagement {
 
-		private ArrayList<Auto> autoliste;
+		private HashMap<Integer, Auto> autoliste;
 
 	public Automanagement() {
-		ArrayList<Auto> autoliste = new ArrayList<Auto>();	
+		autoliste = new HashMap();	
 	}
 		public int getSize() {
-		return autoliste.size(); // gibt Anz. Listenelemente zurück, wird für Kundennummer verwendet/ beginnt bei
+			return autoliste.size(); // gibt Anz. Listenelemente zurück, wird für Kundennummer verwendet/ beginnt bei
 									// 0
 		}
 		
@@ -20,18 +21,27 @@ public class Automanagement {
 		}
 
 		public void addAuto(Auto auto) {
-			autoliste.add(auto); // fügt eîn bestehendes Auto der Liste hinzu / Auto wird in Klasse Kunde erzeugt
+			autoliste.put(auto.getFahrzeugnummer(), auto); // fügt eîn bestehender Kunde der Liste hinzu / Kunde wird in Klasse Kunde erzeugt
 		}
 		
 		public void druckAutoliste() {
-			System.out.println(autoliste.toString());
+			for (Entry<Integer, Auto> e : autoliste.entrySet()) {
+				Auto auto = getAuto(Integer.parseInt(e.getKey().toString()));
+				Model model = auto.getModel();
+				System.out.println("Fahrzeugnummer: " + auto.getFahrzeugnummer() + "\n");
+				System.out.println("Kennzeichen: " + auto.getKennzeichen() + "\n");
+				System.out.println("Kilometerstand: " + auto.getKilometerstand() + "\n");
+				System.out.println("Zulassung: " + auto.getKilometerstand() + "\n");
+				System.out.println("Model: " + model.getModelName() + "\n");
+				System.out.println("Fahrzeugklasse: " + model.getFahrzeugklasse() + "\n");
+				System.out.println("Marke: " + model.getMarke() + "\n");
+				System.out.println("Treibstoff: " + model.getTreibstoff() + "\n");
+				System.out.println("Anzahl Sitzplätze: " + model.getAnzahlSitzplaetze() + "\n");
+				System.out.println("Preis pro Tag inkl. MWST und Fixkosten von CHF 75.- : " + model.getModelPreis() + "\n");
+				System.out.println("Farbe: " + auto.getFarbe() + "\n" + "\n");
+			}
 		}
 
-	//	public void druckAutoliste() {
-		//for(int key : autoliste.keySet()) {
-			
-			//System.out.println("Key: " + key + " / " + "Value: " + autoliste.get(key));
-		//}		
 	}
 
 

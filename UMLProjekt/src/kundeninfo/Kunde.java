@@ -102,6 +102,11 @@ public class Kunde {
 		this.adresse = adresse;
 		this.zahlungsmittel = zahlungsmittel;
 	}
+	
+	public Kunde(String bentuzername, int Kundenummer) {
+		this.benutzername = benutzername;
+		this.kundennummer = kundennummer;
+	}
 
 	public Kunde() {
 	

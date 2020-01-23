@@ -4,6 +4,7 @@ import kundeninfo.*;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Scanner;
 
 import auftrag.Auftrag;
@@ -39,11 +40,13 @@ public class Start {
 	private Firmenkunde firmenkunde = new Firmenkunde();
 	private Model model = new Model();
 	private Auftrag auftrag = new Auftrag();
-
+	int tage = 0;
 
 	public static void main(String[] args) {
-		(new Start()).start(); /* springt in Start-Methode, wird gemacht, damit nicht alle Methoden static
-								 gemacht werden müssen*/
+		(new Start()).start(); /*
+								 * springt in Start-Methode, wird gemacht, damit nicht alle Methoden static
+								 * gemacht werden müssen
+								 */
 
 	}
 
@@ -64,13 +67,13 @@ public class Start {
 		Model modelExtra = new Model("Extra", Fahrzeugklasse.Limousine, Marke.Mercedes, Treibstoff.Elektrizität, 10,
 				((300.00 + model.getFixZuschlag()) * model.getMwst()));
 
-		Auto auto1 = new Auto((automanagement.getSize() + 1), "ZH444555", 56001, LocalDate.of(2013, 01, 13), modelClassic,
-				Status.verfuegbar, Farbe.grau);
+		Auto auto1 = new Auto((automanagement.getSize() + 1), "ZH444555", 56001, LocalDate.of(2013, 01, 13),
+				modelClassic, Status.verfuegbar, Farbe.grau);
 
 		automanagement.addAuto(auto1);
 
-		Auto auto2 = new Auto((automanagement.getSize() + 1), "ZH111223", 44000, LocalDate.of(2015, 03, 22), modelComfort,
-				Status.ausgeliehen, Farbe.weiss);
+		Auto auto2 = new Auto((automanagement.getSize() + 1), "ZH111223", 44000, LocalDate.of(2015, 03, 22),
+				modelComfort, Status.ausgeliehen, Farbe.weiss);
 
 		automanagement.addAuto(auto2);
 
@@ -104,7 +107,8 @@ public class Start {
 			kunde = login(benutzername, passwort);
 
 			if (ueberpruefeLogin(kunde)) {
-				System.out.println("Sie sind nun eingeloggt!");
+				System.out.println("Hallo " + kunde.getBenutzername() + ", \n" + "Sie sind nun eingeloggt! \n");
+				kundenmanagement.druckeKundenangaben();
 				erstellenAuftrag();
 			}
 		}
@@ -152,7 +156,6 @@ public class Start {
 			}
 		}
 	}
-
 
 	private void erfassePrivatkundenangabe() {
 
@@ -351,24 +354,56 @@ public class Start {
 	}
 
 	private void erstellenAuftrag() {
-		
+
 		auftrag.setAuftragsnummer((auftragsmanagement.getSize() + 1));
 		auftrag.setAuftragsdatum(berechnenTagesdatum());
-		
+
 		System.out.println("Geben Sie Ihre Kundennummer ein.");
 		scan = new Scanner(System.in);
 		String k = scan.nextLine();
 		int kunde = Integer.parseInt(k);
-		auftrag.setKundennummer(kunde);;
+		auftrag.setKundennummer(kunde);
+		;
 		System.out.println(auftrag.getKundennummer()); // Bessere Alternative?
+
+		// auto auswählen
+
+		System.out.println("Wählen Sie das Startdatum der Mietdauer: Bsp. 1901-01-01");
+		scan = new Scanner(System.in);
+		String b = scan.nextLine();
+		LocalDate startdatum = LocalDate.parse(b);
+		auftrag.setDatumVon(startdatum);
+		System.out.println(auftrag.getDatumVon());
+
+		System.out.println("Wählen Sie das Enddatum der Mietdauer: Bsp. 1901-01-01 ");
+		scan = new Scanner(System.in);
+		String c = scan.nextLine();
+		LocalDate enddatum = LocalDate.parse(c);
+		auftrag.setDatumBis(enddatum);
+		System.out.println(auftrag.getDatumBis());
 		
-		
-		//  auto auswählen
-		
-		System.out.println("Wählen Sie eines der untenstehenden Auto aus: ");
+		berechneDauer();
+		auftrag.setMietdauer(tage);
+
+		System.out.println("Wählen Sie das Startort der Miete: ");
+		scan = new Scanner(System.in);
+		String d = scan.nextLine();
+		auftrag.setStartOrt(d);
+		System.out.println(auftrag.getStartOrt());
+
+		System.out.println("Wählen Sie das Rückgabeort: ");
+		scan = new Scanner(System.in);
+		String e = scan.nextLine();
+		auftrag.setZielOrt(e);
+		System.out.println(auftrag.getZielOrt());
+
+		auftrag.setEinsatzgebiet("Schweiz");
+		System.out.println("Das Mietauto darf nur im folgenden Einsatzgebiet verwendet werden: ");
+		System.out.println(auftrag.getEinsatzgebiet());
+
+		System.out.println("Wählen Sie eines der untenstehenden Auto aus: " + "\n");
 		automanagement.druckAutoliste();
-		
-		
+
 		System.out.println("Geben Sie die Nummer des gewünschten Fahrzeugs ein. / Bsp. Auto 1 - Eingabe 1");
 		scan = new Scanner(System.in);
 		String a = scan.nextLine();
@@ -376,49 +411,26 @@ public class Start {
 		auftrag.setAutonummer(auto);
 		System.out.println(auftrag.getAutonummer());
 		
-		System.out.println("Wählen Sie das Startdatum der Mietdauer: ");
-		scan = new Scanner(System.in);
-		String b = scan.nextLine();
-		LocalDate startdatum = LocalDate.parse(b);
-		auftrag.setDatumVon(startdatum);
-		System.out.println(auftrag.getDatumVon());
-		
-		System.out.println("Wählen Sie das Enddatum der Mietdauer: ");
-		scan = new Scanner(System.in);
-		String c = scan.nextLine();
-		LocalDate enddatum = LocalDate.parse(c);
-		auftrag.setDatumBis(enddatum);
-		System.out.println(auftrag.getDatumBis());
-		
-		System.out.println("Wählen Sie das Startort der Miete: ");
-		scan = new Scanner(System.in);
-		String d = scan.nextLine();
-		auftrag.setStartOrt(d);
-		System.out.println(auftrag.getStartOrt());
-		
-		System.out.println("Wählen Sie das Rückgabeort: ");
-		scan = new Scanner(System.in);
-		String e = scan.nextLine();
-		auftrag.setZielOrt(e);
-		System.out.println(auftrag.getZielOrt());
-		
-		auftrag.setEinsatzgebiet("Schweiz");
-		System.out.println("Das Mietauto darf nur im folgenden Einsatzgebiet verwendet werden: ");
-	System.out.println(auftrag.getEinsatzgebiet());
-	
-	auftrag.setAuftragstatus(Auftragsstatus.inPruefung);
-	
-	auftragsmanagement.addAuftrag(auftrag);
-	}
-	
-	//Validierung
-	
+		auftragsmanagement.addAuftrag(auftrag);
+		auftragsmanagement.druckeAuftrag();
+
+			auftrag.setAuftragstatus(Auftragsstatus.inPruefung);
+
+			System.out.println("Ihr Auftrag wird geprüft!");
+		}
+
+		// Validierung
+
 	private String berechnenTagesdatum() {
 		Date date = java.util.Calendar.getInstance().getTime();
-		SimpleDateFormat dateFormatter = 
-		          new SimpleDateFormat("dd.MM.yyyy");
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
 		String dateString = dateFormatter.format(date);
 		return dateString;
+	}
+
+	private int berechneDauer() {
+		tage = (int) ChronoUnit.DAYS.between(auftrag.getDatumVon(), auftrag.getDatumBis());
+		return tage;
 	}
 
 }

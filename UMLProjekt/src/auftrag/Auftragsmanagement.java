@@ -1,27 +1,43 @@
 package auftrag;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
-import fahrzeuginfo.Auto;
+import fahrzeuginfo.*;
 
 public class Auftragsmanagement {
 
-		private HashMap<Integer, Auftrag> auftragsliste;
+	private HashMap<Integer, Auftrag> auftragsliste;
 
 	public Auftragsmanagement() {
-		auftragsliste = new HashMap();	
+		auftragsliste = new HashMap();
 	}
-		public int getSize() {
-			return auftragsliste.size(); // gibt Anz. Listenelemente zurück, wird für Kundennummer verwendet/ beginnt bei 0
-								
-		}
-		
-		public Auftrag getAuftrag(int auftragsnummer) {
-			return auftragsliste.get(auftragsnummer);
-			
+
+	public int getSize() {
+		return auftragsliste.size(); // gibt Anz. Listenelemente zurück, wird für Kundennummer verwendet/ beginnt bei
+										// 0
+
+	}
+
+	public Auftrag getAuftrag(int auftragsnummer) {
+		return auftragsliste.get(auftragsnummer);
+
+	}
+
+	public void addAuftrag(Auftrag auftrag) {
+		auftragsliste.put(auftrag.getAuftragsnummer(), auftrag); // fügt eîn bestehender Kunde der Liste hinzu / Kunde
+																	// wird in Klasse Start erzeugt
+	}
+
+	public void druckeAuftrag() {
+		for (Entry<Integer, Auftrag> e : auftragsliste.entrySet()) {
+			Auftrag auftrag = getAuftrag(e.getKey());
+			Auto auto = auftrag.getAuto();
+			Model model = auto.getModel();
+			System.out.println("Auftragsnummer: " + auftrag.getAuftragsnummer() + "\n");
+			System.out.println("Mietdauer: " + auftrag.getDatumVon() + " - " + auftrag.getDatumBis() + "\n");
+			System.out.println("Preis: " + auftrag.getMietdauer() * model.getModelPreis());
 		}
 
-		public void addAuftrag(Auftrag auftrag) {
-			auftragsliste.put(auftrag.getAuftragsnummer(), auftrag); // fügt eîn bestehender Kunde der Liste hinzu / Kunde wird in Klasse  Start erzeugt
-		}
+	}
 }

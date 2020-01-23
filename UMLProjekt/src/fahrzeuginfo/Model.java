@@ -13,7 +13,7 @@ public class Model {
 	private int anzahlSitzplaetze;
 	private double modelPreis;
 	private double fixZuschlag = 75.00;
-	private double mwst = 7.70;
+	private double mwst = 1.077;
 	
 	public String getModelName() {
 		return modelName;
@@ -82,7 +82,13 @@ public class Model {
 	public Model() {
 		
 	}
-	public Model(String modelName, Fahrzeugklasse fahrzeugklasse, Marke marke, Treibstoff treibstoff, int anzahlSitzplatze, double preis) {
-		
+	public Model(String modelName, Fahrzeugklasse fahrzeugklasse, Marke marke, Treibstoff treibstoff, int anzahlSitzplaetze, double modelPreis) {
+		this.modelName = modelName;
+		this.fahrzeugklasse = fahrzeugklasse;
+		this.marke = marke;
+		this.treibstoff = treibstoff;
+		this.anzahlSitzplaetze = anzahlSitzplaetze;
+		this.modelPreis = modelPreis;
 	}
+	
 }
