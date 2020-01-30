@@ -5,10 +5,9 @@ public class Firmenkunde extends Kunde {
 	private String referenz;
 
 	public Firmenkunde(int kundennummer, String name, String benutzername, String passwort,
-			Fuehrerschein fuehrerschein, Adresse adresse, Zahlungsmittel zahlungsmittel, String referenz) {//... alle Attribute von Kunde und Firmenkunden
-	
-			super(kundennummer, name, benutzername, passwort, fuehrerschein, adresse, zahlungsmittel); 	// .... für alle Kundenattribute
-			this.referenz = referenz; // bei Subklassen nur für neues Attribut this. ..., da bei Kunde bereits angelegt
+			Fuehrerschein fuehrerschein, Adresse adresse, Zahlungsmittel zahlungsmittel, String referenz) {
+			super(kundennummer, name, benutzername, passwort, fuehrerschein, adresse, zahlungsmittel); 	
+			this.referenz = referenz;
 	}
 
 	public String getReferenz() {

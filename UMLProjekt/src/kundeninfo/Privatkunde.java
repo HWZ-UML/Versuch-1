@@ -2,7 +2,7 @@ package kundeninfo;
 
 import java.time.LocalDate;
 
-public class Privatkunde extends Kunde{ // wie bei Firmenkunde Konstruktor erstellen
+public class Privatkunde extends Kunde{ 
 
 	private String vorname;
 	private LocalDate geburtsdatum;

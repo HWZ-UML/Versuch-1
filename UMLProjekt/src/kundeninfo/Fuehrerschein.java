@@ -5,8 +5,6 @@ public class Fuehrerschein {
 
 	private int fuehrerscheinnummer;
 	private LocalDate fuehrerscheinAblaufdatum;
-		
-	// Konstruktor bauen 
 	
 public int getFuhrerscheinnummer() {
 	return fuehrerscheinnummer;

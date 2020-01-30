@@ -1,17 +1,14 @@
 package start;
 
-import kundeninfo.*;
-
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import auftrag.Auftrag;
 import auftrag.Auftragsmanagement;
-
-import java.util.Date;
-
 import enums.Auftragsstatus;
 import enums.Fahrzeugklasse;
 import enums.Farbe;
@@ -22,6 +19,7 @@ import fahrzeuginfo.Auto;
 import fahrzeuginfo.Automanagement;
 import fahrzeuginfo.Model;
 import kundeninfo.Adresse;
+import kundeninfo.Firmenkunde;
 import kundeninfo.Fuehrerschein;
 import kundeninfo.Kunde;
 import kundeninfo.Kundenmanagement;
@@ -125,7 +123,6 @@ public class Start {
 		}
 	}
 
-	// Autoinformationen
 	private void registrieren() {
 
 		System.out.println("Sind Sie ein Privatkunde oder Firmenkunde? P/F");
@@ -345,7 +342,7 @@ public class Start {
 		if (kunde.getLogin()) {
 			System.out.println("Der Benutzer ist bereits angemeldet");
 		} else {
-			kunde.setLogin(true);// könnte für alle Attribute zum Anpassen benutzt werden - Aufwändig
+			kunde.setLogin(true);
 		}
 	}
 
@@ -366,7 +363,7 @@ public class Start {
 		;
 		System.out.println(auftrag.getKundennummer()); // Bessere Alternative?
 
-		// auto auswählen
+		// auto auswählen:
 
 		System.out.println("Wählen Sie das Startdatum der Mietdauer: Bsp. 1901-01-01");
 		scan = new Scanner(System.in);
@@ -407,9 +404,11 @@ public class Start {
 		System.out.println("Geben Sie die Nummer des gewünschten Fahrzeugs ein. / Bsp. Auto 1 - Eingabe 1");
 		scan = new Scanner(System.in);
 		String a = scan.nextLine();
-		int auto = Integer.parseInt(a);
-		auftrag.setAutonummer(auto);
-		System.out.println(auftrag.getAutonummer());
+		int autozahl = Integer.parseInt(a);
+		Auto result = automanagement.getAutoliste().get(autozahl);
+	
+	    System.out.println(result.getKennzeichen());  // mit result weiterarbieten
+		auftrag.setAuto(result);
 		
 		auftragsmanagement.addAuftrag(auftrag);
 		auftragsmanagement.druckeAuftrag();
@@ -418,8 +417,6 @@ public class Start {
 
 			System.out.println("Ihr Auftrag wird geprüft!");
 		}
-
-		// Validierung
 
 	private String berechnenTagesdatum() {
 		Date date = java.util.Calendar.getInstance().getTime();
@@ -433,4 +430,5 @@ public class Start {
 		return tage;
 	}
 
+	//Validierung:
 }

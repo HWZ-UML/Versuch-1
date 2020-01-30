@@ -16,13 +16,13 @@ public class Kundenmanagement {
 	}
 
 	public int getSize() {
-		return kundenliste.size(); // gibt Anz. Listenelemente zurück, wird für Kundennummer verwendet/ beginnt bei
-									// 0
+		return kundenliste.size(); // gibt Anz. Listenelemente zurück, wird für Kundennummer verwendet/ beginnt bei 0
+									
 	}
 
 	public void addKunde(Kunde kunde) {
-		kundenliste.put(kunde.getBenutzername(), kunde); // fügt eîn bestehender Kunde der Liste hinzu / Kunde wird in
-															// Klasse Kunde erzeugt
+		kundenliste.put(kunde.getBenutzername(), kunde); // fügt eîn bestehender Kunde der Liste hinzu / Kunde wird in Start Klasse erzeugt
+														
 	}
 
 	public void druckeKundenangaben() {

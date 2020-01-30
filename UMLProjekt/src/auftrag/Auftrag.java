@@ -9,9 +9,7 @@ public class Auftrag {
 	private int auftragsnummer;
 	private String auftragsdatum;
 	private int kundennummer;
-	// private Kunde kundennummer;
-	private int autonummer;
-	public Auto auto;
+	private Auto auto;
 	private LocalDate datumVon;
 	private LocalDate datumBis;
 	private String startOrt;
@@ -30,10 +28,6 @@ public class Auftrag {
 
 	public int getKundennummer() {
 		return kundennummer;
-	}
-
-	public int getAutonummer() {
-		return autonummer;
 	}
 
 	public LocalDate getDatumVon() {
@@ -80,10 +74,6 @@ public class Auftrag {
 		this.kundennummer = kundennummer;
 	}
 
-	public void setAutonummer(int autonummer) {
-		this.autonummer = autonummer;
-	}
-
 	public void setDatumVon(LocalDate datumVon) {
 		this.datumVon = datumVon;
 	}
@@ -116,12 +106,11 @@ public class Auftrag {
 		this.auto = auto;
 	}
 	
-	public Auftrag (int auftragsnummer, String auftragsdatum, int kundennummer, int autonummer, Auto auto, LocalDate datumVon, LocalDate datumBis, 
+	public Auftrag (int auftragsnummer, String auftragsdatum, int kundennummer, Auto auto, LocalDate datumVon, LocalDate datumBis, 
 			String startOrt, String zielOrt, String einsatzgebiet, Auftragsstatus auftragsstatus, int mietdauer) {
 		this.auftragsnummer = auftragsnummer;
 		this.auftragsdatum = auftragsdatum;
 		this.kundennummer = kundennummer;
-		this.autonummer = autonummer;
 		this.auto = auto;
 		this.datumVon = datumVon;
 		this.datumBis = datumBis;

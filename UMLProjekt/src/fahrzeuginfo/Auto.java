@@ -5,7 +5,7 @@ import java.util.Set;
 import enums.Farbe;
 import enums.Status;
 
-public class Auto {  //Kundenmanagement für Auto erstellen und in Start anlegen
+public class Auto {  
 
 	private int fahrzeugnummer;
 	private String kennzeichen;

@@ -94,18 +94,13 @@ public class Kunde {
 	}
 	
 	public Kunde(int Kudennummer, String name, String benutzername, String passwort, Fuehrerschein fuehrerschein, 
-		Adresse adresse, Zahlungsmittel zahlungsmittel) { //oben in () alle Attribute reinnehmen und unten mit this auflisten
+		Adresse adresse, Zahlungsmittel zahlungsmittel) { 
 		this.name = name;
 		this.benutzername = benutzername;
 		this.passwort = passwort;
 		this.fuehrerschein = fuehrerschein;
 		this.adresse = adresse;
 		this.zahlungsmittel = zahlungsmittel;
-	}
-	
-	public Kunde(String bentuzername, int Kundenummer) {
-		this.benutzername = benutzername;
-		this.kundennummer = kundennummer;
 	}
 
 	public Kunde() {

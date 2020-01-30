@@ -2,7 +2,7 @@ package kundeninfo;
 
 import java.time.LocalDate;
 
-public class Zahlungsmittel { //Konstruktor bauen 
+public class Zahlungsmittel { 
 
 	private String kreditkartenart;
 	private int kreditkartennummer;

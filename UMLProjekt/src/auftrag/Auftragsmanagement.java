@@ -14,8 +14,7 @@ public class Auftragsmanagement {
 	}
 
 	public int getSize() {
-		return auftragsliste.size(); // gibt Anz. Listenelemente zurück, wird für Kundennummer verwendet/ beginnt bei
-										// 0
+		return auftragsliste.size(); // gibt Anz. Listenelemente zurück, wird für Auftragsnummer verwendet/ beginnt bei 0
 
 	}
 
@@ -25,8 +24,8 @@ public class Auftragsmanagement {
 	}
 
 	public void addAuftrag(Auftrag auftrag) {
-		auftragsliste.put(auftrag.getAuftragsnummer(), auftrag); // fügt eîn bestehender Kunde der Liste hinzu / Kunde
-																	// wird in Klasse Start erzeugt
+		auftragsliste.put(auftrag.getAuftragsnummer(), auftrag); // fügt eîn Auftrag der Liste hinzu / Auftrag wird in Klasse Start erzeugt
+																
 	}
 
 	public void druckeAuftrag() {
