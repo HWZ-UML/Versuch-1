@@ -27,6 +27,10 @@ public class Auftragsmanagement {
 		auftragsliste.put(auftrag.getAuftragsnummer(), auftrag); // fügt eîn Auftrag der Liste hinzu / Auftrag wird in Klasse Start erzeugt
 																
 	}
+	
+	public HashMap<Integer, Auftrag> getAuftragsliste() {
+		return auftragsliste;
+	}
 
 	public void druckeAuftrag() {
 		for (Entry<Integer, Auftrag> e : auftragsliste.entrySet()) {

@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 import auftrag.Auftrag;
 import auftrag.Auftragsmanagement;
@@ -39,8 +38,9 @@ public class Start {
 	private Model model = new Model();
 	private Auftrag auftrag = new Auftrag();
 	int tage = 0;
+	Auto result;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		(new Start()).start(); /*
 								 * springt in Start-Methode, wird gemacht, damit nicht alle Methoden static
 								 * gemacht werden müssen
@@ -48,7 +48,7 @@ public class Start {
 
 	}
 
-	private void start() {
+	private void start() throws Exception {
 
 		Fuehrerschein fuehrerschein1 = new Fuehrerschein(225566, LocalDate.of(2020, 10, 01));
 		Adresse adresse1 = new Adresse("Musterstrasse", 1, 8840, "Musterhausaen", "muster@gmail.com", 0444000101);
@@ -107,19 +107,19 @@ public class Start {
 			if (ueberpruefeLogin(kunde)) {
 				System.out.println("Hallo " + kunde.getBenutzername() + ", \n" + "Sie sind nun eingeloggt! \n");
 				kundenmanagement.druckeKundenangaben();
-				erstellenAuftrag();
+				menu();
 			}
-		}
 
-		else if (eingabe.equalsIgnoreCase("N")) {
+			else if (eingabe.equalsIgnoreCase("N")) {
 
-			registrieren();
-			start();
-		}
+				registrieren();
+				start();
+			}
 
-		else { // wenn nichts richtiges eingegeben wird, zurück zum start
-			System.out.println("Ungültige Eingabe!");
-			start();
+			else { // wenn nichts richtiges eingegeben wird, zurück zum start
+				System.out.println("Ungültige Eingabe!");
+				start();
+			}
 		}
 	}
 
@@ -320,7 +320,7 @@ public class Start {
 
 	}
 
-	private Kunde login(String benutzername, String passwort) {
+	private Kunde login(String benutzername, String passwort) throws Exception {
 		if (kundenmanagement.getKunde(benutzername) == null) {
 			System.out.println("Benutzer nicht gefunden");
 			start();
@@ -350,7 +350,26 @@ public class Start {
 		return kunde.getLogin();
 	}
 
-	private void erstellenAuftrag() {
+	private void menu() throws Exception {
+		System.out.println("Auftrag erstellen (A) oder Kundenangaben bearbeiten (B)?");
+		scan = new Scanner(System.in);
+		eingabe = scan.nextLine();
+
+		if (eingabe.equalsIgnoreCase("A")) {
+			erstellenAuftrag();
+		}
+
+		else if (eingabe.equalsIgnoreCase("B")) {
+			bearbeitenKundenprofil();
+		}
+
+		else {
+			System.out.println("Ungültige Eingabe!");
+			menu();
+		}
+	}
+
+	private void erstellenAuftrag() throws Exception {
 
 		auftrag.setAuftragsnummer((auftragsmanagement.getSize() + 1));
 		auftrag.setAuftragsdatum(berechnenTagesdatum());
@@ -362,8 +381,6 @@ public class Start {
 		auftrag.setKundennummer(kunde);
 		;
 		System.out.println(auftrag.getKundennummer()); // Bessere Alternative?
-
-		// auto auswählen:
 
 		System.out.println("Wählen Sie das Startdatum der Mietdauer: Bsp. 1901-01-01");
 		scan = new Scanner(System.in);
@@ -378,7 +395,7 @@ public class Start {
 		LocalDate enddatum = LocalDate.parse(c);
 		auftrag.setDatumBis(enddatum);
 		System.out.println(auftrag.getDatumBis());
-		
+
 		berechneDauer();
 		auftrag.setMietdauer(tage);
 
@@ -398,6 +415,8 @@ public class Start {
 		System.out.println("Das Mietauto darf nur im folgenden Einsatzgebiet verwendet werden: ");
 		System.out.println(auftrag.getEinsatzgebiet());
 
+		// auto auswählen:
+
 		System.out.println("Wählen Sie eines der untenstehenden Auto aus: " + "\n");
 		automanagement.druckAutoliste();
 
@@ -405,18 +424,19 @@ public class Start {
 		scan = new Scanner(System.in);
 		String a = scan.nextLine();
 		int autozahl = Integer.parseInt(a);
-		Auto result = automanagement.getAutoliste().get(autozahl);
-	
-	    System.out.println(result.getKennzeichen());  // mit result weiterarbieten
+		result = automanagement.getAutoliste().get(autozahl);
+
+		System.out.println(result.getKennzeichen()); // mit result weiterarbieten
 		auftrag.setAuto(result);
-		
+
 		auftragsmanagement.addAuftrag(auftrag);
 		auftragsmanagement.druckeAuftrag();
 
-			auftrag.setAuftragstatus(Auftragsstatus.inPruefung);
+		auftrag.setAuftragstatus(Auftragsstatus.inPruefung);
 
-			System.out.println("Ihr Auftrag wird geprüft!");
-		}
+		validierung();
+
+	}
 
 	private String berechnenTagesdatum() {
 		Date date = java.util.Calendar.getInstance().getTime();
@@ -430,5 +450,230 @@ public class Start {
 		return tage;
 	}
 
-	//Validierung:
+	// Validierung:
+
+	private void validierung() throws Exception {
+
+		boolean autoVerfuegbar = false; // abfrage ausgewältes auto == Status verfuegbar
+
+		boolean startDatum = false; // Startdatum > heute
+		boolean endDatum = false;// Enddatum > Startdatum
+
+		boolean startOrt = false; // in der Schweiz pruefung zur zeit nicht aktiv
+		boolean zielOrt = false; // in der Schweiz pruefung zur zeit nicht aktiv
+
+		// boolean kreditkartenAblaufdatum = false; // endDatumAuftrag +30 Days <
+		// KreditkartenAblaufdatum
+		boolean zahlungsinformationen = false;// Kartentyp Vorhanden, Kreditkartennummer voständig
+		boolean pruefungRueckantwortAntwortKreditkartenAnbieter = false; // private Boolean antwortKreditkartenAnbieter;
+																			// mit get Set in auftrag erfasst
+		// ist nur für die fehlermeldung relevant. Könnte auch mit einem
+		// auftrag.getAntwortKreditkartenAnbieter() gelösst werden
+
+		int trueCount = 0;
+		int loopantwortKreditkartenAnbiete = 30;// wie oft soll auftrag.getAntwortKreditkartenAnbieter() abgefragt
+												// werden, einstellung 20 Sec pro loop.
+		LocalDate today = LocalDate.now();
+		LocalDate d1 = auftrag.getDatumVon();
+		LocalDate d2 = auftrag.getDatumBis();
+
+		System.out.println("Ihre Auftrag wird bearbeitet - Bitte haben Sie ein wenig Gedult");
+
+		// Autoverfügbar?
+
+		if ((result.getStatus()) == Status.verfuegbar) {
+			autoVerfuegbar = true;
+			trueCount++;
+		} // konnte noch nicht überprüft werden
+
+		// Datum wird geprüft
+		if (d1.isAfter(today)) {
+			startDatum = true;
+			trueCount++;
+		}
+
+		if (d2.isAfter(d1)) {
+			endDatum = true;
+			trueCount++;
+		}
+		// Ort wird geprüft
+		if (!startOrt) {
+
+			Textfilereader t = new Textfilereader();
+
+			String inputString = auftrag.getStartOrt();
+			String inputTextFile = "\\src\\start\\plz.txt";
+			Boolean found = null;
+			System.out.println(inputString + inputTextFile + found);
+			t.compare(inputString, inputTextFile, found);
+
+			System.out.println("Hallo4");
+			startOrt = t.getFound();
+			System.out.println("Hallo5");
+
+			if (startOrt) {
+				System.out.println("Hallo6");
+				trueCount++;
+			}
+			System.out.println("startort" + trueCount);
+		}
+
+		if (!zielOrt) {
+			Textfilereader t = new Textfilereader();
+			{
+				String inputString = auftrag.getZielOrt();
+				String inputTextFile = "\\src\\start\\plz.txt";
+				Boolean found = null;
+				t.compare(inputString, inputTextFile, found);
+				{
+					zielOrt = t.getFound();
+				}
+			}
+			if (zielOrt) {
+				trueCount++;
+			}
+			System.out.println(trueCount + "zielort");
+		}
+
+		for (int i = 0; i <= loopantwortKreditkartenAnbiete; i++) {// 30 x loop loopantwortKreditkartenAnbiete; anfang
+																	// vom block is die variable deffiniert.
+			if (auftrag.getAntwortKreditkartenAnbieter() == false) { // wenn noch keine rückantwort gekommen == falsh.
+				// schnittstelle wird bei einer rückantwort mit set den wert von
+				// antwortKreditkartenAnbiete änder auf true.
+
+				try {
+					Thread.sleep(20000);
+				} // 20 sec * loopantwortKreditkartenAnbiete;
+				catch (Exception ex) {
+					ex.printStackTrace();
+				}
+
+				// **************************************************************************
+				// hard codiert für einen Testversion, schnittstelle fehlt noch. Code entfernen
+				// für prod.
+				if (i == 2) {
+					auftrag.setAntwortKreditkartenAnbieter(true);
+				}
+				// ***************************************************************************
+			}
+
+			else {
+				trueCount++;
+				i = loopantwortKreditkartenAnbiete;
+				pruefungRueckantwortAntwortKreditkartenAnbieter = true;
+			} // for wird beendet. loopantwortKreditkartenAnbiete
+
+		}
+		// }
+
+		// *** Prüfung korrekt
+		if (trueCount == 6) { // wenn alles stimmt wird dies ausgeführt und weitergeleiten an....... zur Zeit
+								// Line 419
+			System.out.println("Die Prüfung ist Erfolgreich Abgschlossen und Ihren Auftrag wurde angenommen");
+
+		}
+
+		// ***Fehler wurde generiert 1. Print was ist falsch 2. Kunde Entscheide über
+		// weiteres vorgehen
+		else {
+			if (autoVerfuegbar = false) {
+				System.out.println("Auto nicht verfügbar");
+			}
+			if (startDatum = false) {
+				System.out.println("Startdatum liegt in der Vergangenheit");
+			}
+			if (endDatum = false) {
+				System.out.println("Enddatum liegt vor dem Startdatum");
+			}
+			// if (laufzeituberschreitung = false) {System.out.println("Die Mietdauer ist
+			// über 200 Tage. Bitte konntaktieren Sie einen Sachbearbeiter");}
+			// if (kundenalter = false) {System.out.println("Autovermittung nur an Personen
+			// über 20 Jahren gestattet");}
+			if (zahlungsinformationen = false) {
+				System.out.println(" Kreditkartenangaben sind nicht korrekt");
+			}
+			if (pruefungRueckantwortAntwortKreditkartenAnbieter = false) {
+				System.out
+						.println(" Buchungsbestätigung von der Bank nicht erhalten. Bitte Kontaktieren Sie Ihre Bank");
+			}
+			if (startOrt = false) {
+				System.out.println("Start Ort ist ausserhalb der Schweiz oder unbekannter Ort");
+			}
+			if (zielOrt = false) {
+				System.out.println("Ziel Ort ist ausserhalb der Schweiz oder unbekannter Ort");
+			}
+
+			System.out.println(
+					"Drücken Sie für eine erneute Eingabe N oder für einen Bearbeitung von einem Sachbearbeiter S");
+			scan = new Scanner(System.in);
+			eingabe = scan.nextLine();
+
+			if (eingabe.equalsIgnoreCase("N")) {
+				erstellenAuftrag();
+			}
+			if (eingabe.equalsIgnoreCase("S")) {
+				System.out.println("Sie werden von uns Kontaktiert");
+			}
+			// pale info an sachbearbeiter noch senden. evt .txt erstellen }
+			else {
+				erstellenAuftrag();
+			}
+		}
+	}//
+
+	// ende block Valiedierung
+
+	// Kundenprofil bearbeiten:
+
+	private void bearbeitenKundenprofil() throws Exception {
+
+		System.out.println("Geben Sie bitte ihre Kundennummer ein.");
+		scan = new Scanner(System.in);
+		String a = scan.nextLine();
+		int kundenzahl = Integer.parseInt(a);
+		Kunde result = kundenmanagement.getKundenliste().get(kundenzahl);
+
+		System.out.print("Ihr aktuell gespeicherten Name ist: ");
+		System.out.println(kunde.getName());
+		System.out.println("Bitte geben Sie Ihren neun Namen ein.");
+		scan = new Scanner(System.in);
+		String b = scan.nextLine();
+		kunde.setName(b);
+		System.out.println(kunde.getName() + "\n");
+
+		System.out.print("Ihr aktuell gespeicherten Vorname ist: ");
+		System.out.println(privatkunde.getVorname());
+		System.out.println("Bitte geben Sie Ihren neuen Vornamen ein.");
+		scan = new Scanner(System.in);
+		String c = scan.nextLine();
+		privatkunde.setVorname(c);
+		System.out.println(privatkunde.getVorname() + "\n");
+
+		System.out.print("Ihr aktuell gespeicherten Benutzername ist: ");
+		System.out.println(kunde.getBenutzername());
+		System.out.println("Bitte geben Sie Ihr Benutzername ein.");
+		scan = new Scanner(System.in);
+		String d = scan.nextLine();
+		privatkunde.setBenutzername(d);
+		System.out.println(privatkunde.getBenutzername() + "\n");
+
+		System.out.print("Ihr aktuell gespeicherten Passwort ist: ");
+		System.out.println(kunde.getPasswort());
+		System.out.println("Bitte geben Sie Ihr Passwort ein.");
+		scan = new Scanner(System.in);
+		String e = scan.nextLine();
+		privatkunde.setPasswort(e);
+		System.out.println(privatkunde.getPasswort() + "\n");
+
+		System.out.println("Ihre neuen Daten sind: ");
+		System.out.println(kunde.getName());
+		System.out.println(privatkunde.getVorname());
+		System.out.println(kunde.getBenutzername());
+		System.out.println(kunde.getPasswort() + "\n");
+
+		System.out.println("Sie haben ihr Kundenprofil erfolgreich geändert!" + "\n");
+
+		menu();
+
+	}
 }

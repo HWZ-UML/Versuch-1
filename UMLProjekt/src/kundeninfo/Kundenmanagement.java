@@ -3,6 +3,8 @@ package kundeninfo;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import fahrzeuginfo.Auto;
+
 public class Kundenmanagement {
 
 	private HashMap<String, Kunde> kundenliste;
@@ -23,6 +25,10 @@ public class Kundenmanagement {
 	public void addKunde(Kunde kunde) {
 		kundenliste.put(kunde.getBenutzername(), kunde); // fügt eîn bestehender Kunde der Liste hinzu / Kunde wird in Start Klasse erzeugt
 														
+	}
+	
+	public HashMap<String, Kunde> getKundenliste() {
+		return kundenliste;
 	}
 
 	public void druckeKundenangaben() {

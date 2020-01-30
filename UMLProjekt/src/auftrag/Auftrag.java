@@ -17,6 +17,8 @@ public class Auftrag {
 	private String einsatzgebiet = "Schweiz";
 	private Auftragsstatus auftragsstatus = Auftragsstatus.inPruefung;
 	private int mietdauer;
+	private boolean AntwortKreditkartenAnbieter = false;
+	private Auto status;
 
 	public int getAuftragsnummer() {
 		return auftragsnummer;
@@ -61,6 +63,14 @@ public class Auftrag {
 	public Auto getAuto() {
 		return auto;
 	}
+	
+	public Boolean getAntwortKreditkartenAnbieter() {
+		return AntwortKreditkartenAnbieter;
+	}
+	
+	public Auto getStatus() {
+		return status;
+	}
 
 	public void setAuftragsnummer(int auftragsnummer) {
 		this.auftragsnummer = auftragsnummer;
@@ -104,6 +114,14 @@ public class Auftrag {
 
 	public void setAuto(Auto auto) {
 		this.auto = auto;
+	}
+	
+	public void setAntwortKreditkartenAnbieter( Boolean antwortKreditkartenAnbieter) {
+		this.AntwortKreditkartenAnbieter = antwortKreditkartenAnbieter;
+	}
+	
+	public void setStatus(Auto status) {
+		this.status = status;
 	}
 	
 	public Auftrag (int auftragsnummer, String auftragsdatum, int kundennummer, Auto auto, LocalDate datumVon, LocalDate datumBis, 
