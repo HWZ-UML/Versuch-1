@@ -6,6 +6,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Scanner;
 
+
 import auftrag.Auftrag;
 import auftrag.Auftragsmanagement;
 import enums.Auftragsstatus;
@@ -484,7 +485,7 @@ public class Start {
 		if ((result.getStatus()) == Status.verfuegbar) {
 			autoVerfuegbar = true;
 			trueCount++;
-		} // konnte noch nicht überprüft werden
+		}
 
 		// Datum wird geprüft
 		if (d1.isAfter(today)) {
@@ -502,27 +503,24 @@ public class Start {
 			Textfilereader t = new Textfilereader();
 
 			String inputString = auftrag.getStartOrt();
-			String inputTextFile = "\\src\\start\\plz.txt";
+			String inputTextFile = "src\\start\\plz.txt";
 			Boolean found = null;
-			System.out.println(inputString + inputTextFile + found);
 			t.compare(inputString, inputTextFile, found);
 
-			System.out.println("Hallo4");
 			startOrt = t.getFound();
-			System.out.println("Hallo5");
 
 			if (startOrt) {
-				System.out.println("Hallo6");
+
 				trueCount++;
 			}
-			System.out.println("startort" + trueCount);
+
 		}
 
 		if (!zielOrt) {
 			Textfilereader t = new Textfilereader();
 			{
 				String inputString = auftrag.getZielOrt();
-				String inputTextFile = "\\src\\start\\plz.txt";
+				String inputTextFile = "src\\start\\plz.txt";
 				Boolean found = null;
 				t.compare(inputString, inputTextFile, found);
 				{
@@ -532,7 +530,7 @@ public class Start {
 			if (zielOrt) {
 				trueCount++;
 			}
-			System.out.println(trueCount + "zielort");
+
 		}
 
 		for (int i = 0; i <= loopantwortKreditkartenAnbiete; i++) {// 30 x loop loopantwortKreditkartenAnbiete; anfang
@@ -576,31 +574,26 @@ public class Start {
 		// ***Fehler wurde generiert 1. Print was ist falsch 2. Kunde Entscheide über
 		// weiteres vorgehen
 		else {
-			if (autoVerfuegbar = false) {
+			System.out.println("Es ist ein Fehler aufgetreten:");
+			if (!autoVerfuegbar) {
 				System.out.println("Auto nicht verfügbar");
 			}
-			if (startDatum = false) {
-				System.out.println("Startdatum liegt in der Vergangenheit");
+			if (!startDatum) {
+				System.out.println("Startdatum liegt in der Vergangenheit.");
 			}
-			if (endDatum = false) {
-				System.out.println("Enddatum liegt vor dem Startdatum");
+			if (!endDatum ) {
+				System.out.println("Enddatum liegt vor dem Startdatum.");
 			}
-			// if (laufzeituberschreitung = false) {System.out.println("Die Mietdauer ist
-			// über 200 Tage. Bitte konntaktieren Sie einen Sachbearbeiter");}
-			// if (kundenalter = false) {System.out.println("Autovermittung nur an Personen
-			// über 20 Jahren gestattet");}
-			if (zahlungsinformationen = false) {
-				System.out.println(" Kreditkartenangaben sind nicht korrekt");
-			}
-			if (pruefungRueckantwortAntwortKreditkartenAnbieter = false) {
+			
+			if (!pruefungRueckantwortAntwortKreditkartenAnbieter) {
 				System.out
-						.println(" Buchungsbestätigung von der Bank nicht erhalten. Bitte Kontaktieren Sie Ihre Bank");
+						.println("Buchungsbestätigung von der Bank nicht erhalten. Bitte Kontaktieren Sie Ihre Bank.");
 			}
-			if (startOrt = false) {
-				System.out.println("Start Ort ist ausserhalb der Schweiz oder unbekannter Ort");
+			if (!startOrt ) {
+				System.out.println("Start Ort ist ausserhalb der Schweiz oder unbekannter Ort.");
 			}
-			if (zielOrt = false) {
-				System.out.println("Ziel Ort ist ausserhalb der Schweiz oder unbekannter Ort");
+			if (!zielOrt ) {
+				System.out.println("Ziel Ort ist ausserhalb der Schweiz oder unbekannter Ort.");
 			}
 
 			System.out.println(
@@ -613,8 +606,9 @@ public class Start {
 			}
 			if (eingabe.equalsIgnoreCase("S")) {
 				System.out.println("Sie werden von uns Kontaktiert");
+				// Methode eibauen für info an Sachbearbeiter,
 			}
-			// pale info an sachbearbeiter noch senden. evt .txt erstellen }
+
 			else {
 				erstellenAuftrag();
 			}
