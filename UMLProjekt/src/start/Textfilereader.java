@@ -7,10 +7,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+//****************************************
+//
+//Class um einen String (ein Word) im .txt zu Überprüfen. Die Prüfung erfolgt per Linie. Ende von der Methode ist jeweils der Code zum Aufrufen der Methode und die Varibeln, welche gestetz werde müssen.
+//
+//****************************************
 class Textfilereader {
 
 	private Boolean found = null; // wird auf true oder false geändert wenn der text vorhanden ist = true, wenn
-									// nciht vorhanden false
+									//
 	private String readLineBr; // temporäre Variable die gelesenen Line wird hier abgespeichert.
 	private String outputString = null; // gewünster text nach welchem im dokument gesucht werden sollte
 	private File outputTextFile = null; // Pfad des Dokument .txt am ende des Pfad nicht vergessen!!!
@@ -19,15 +24,15 @@ class Textfilereader {
 		return found;
 	}
 
-	public void compare(String inputString, String inputTextFile, Boolean found)  {
+	public void compare(String inputString, String inputTextFile)  {
 		
+		this.found= null; // found ist das Ergbiniss. Vor jeder Prüfung wird der Wert gelöscht, weil mehrer Methoden zugreifen.
 		this.outputString = inputString;
-		File file = new File(inputTextFile);// wechseln von eingabe zu temp. wert (kann bei darf auch dur get/set ersetz werden)
-		this.outputTextFile = file; // wechseln von eingabe zu temp wert (kann bei darf auch dur get/set ersetz werden)
-// get /set nicht machen, da diese variante die handhabung einschränkt und somit fehler vermeidet.
+		File outputTextFile = new File(inputTextFile);
 		BufferedReader br=null;
 		try {
 			br = new BufferedReader(new FileReader(outputTextFile));
+			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -41,7 +46,7 @@ class Textfilereader {
 // hier eintragen was gemaht werden soll wenn der text gefunden wurde
 					found = true;
 					this.found = found;
-					System.out.println(found);
+					
 					break;
 
 				} else {
@@ -53,37 +58,14 @@ class Textfilereader {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-//	Textfilereader t = new Textfilereader();
-//	{
-//	String inputString = "6050";
-//	String inputTextFile = "C:\\Users\\gmx12\\eclipse-workspace\\UMLProject\\src\\start\\plz.txt";
-//Boolean found = null;
-//	t.compare(inputString, inputTextFile, found);{ //throws Execption nehmen 	
-//		found= t.getFound();// found wird aktualisiert und ist das ergebniss der abfrage. 
-//		
-//	}}
-	
-}
+	}}
 
-		
-
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-		
-	
-
-//	Textfilereader t = new Textfilereader();
-//	{
-//	String inputString = "6050";
-//	String inputTextFile = "C:\\Users\\gmx12\\eclipse-workspace\\UMLProject\\src\\start\\plz.txt";
-//Boolean found = null;
-//	t.compare(inputString, inputTextFile, found);{ //throws Execption nehmen 	
-//		found= t.getFound();// found wird aktualisiert und ist das ergebniss der abfrage. 
-//		
-//	}}
+//if (!startOrt) {
+//Textfilereader t = new Textfilereader(); // Classe Aufrufen
+//String inputTextFile = "src\\start\\plz.txt"; // Wichtig ab src den Pfand angeben. File im Package speichern
+//String inputString = // z.B. auftrag.getStartOrt(); // zuprüfender String eingeben.
+//
+//t.compare(inputString, inputTextFile);
+// lokale Variable = t.getFound(); // boolean Ergebnis der Abfrage
+//
+//}

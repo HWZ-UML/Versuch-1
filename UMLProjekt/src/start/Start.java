@@ -6,7 +6,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Scanner;
 
-
 import auftrag.Auftrag;
 import auftrag.Auftragsmanagement;
 import enums.Auftragsstatus;
@@ -427,7 +426,7 @@ public class Start {
 		int autozahl = Integer.parseInt(a);
 		result = automanagement.getAutoliste().get(autozahl);
 
-		System.out.println(result.getKennzeichen()); // mit result weiterarbieten
+		System.out.println(result.getKennzeichen()); // mit result weiterarbeiten
 		auftrag.setAuto(result);
 
 		auftragsmanagement.addAuftrag(auftrag);
@@ -478,6 +477,9 @@ public class Start {
 		LocalDate d1 = auftrag.getDatumVon();
 		LocalDate d2 = auftrag.getDatumBis();
 
+		Textfilereader t = new Textfilereader();
+		String inputTextFile = "src\\start\\plz.txt";
+		
 		System.out.println("Ihre Auftrag wird bearbeitet - Bitte haben Sie ein wenig Gedult");
 
 		// Autoverfügbar?
@@ -500,37 +502,26 @@ public class Start {
 		// Ort wird geprüft
 		if (!startOrt) {
 
-			Textfilereader t = new Textfilereader();
-
 			String inputString = auftrag.getStartOrt();
-			String inputTextFile = "src\\start\\plz.txt";
-			Boolean found = null;
-			t.compare(inputString, inputTextFile, found);
-
+			
+			t.compare(inputString, inputTextFile);
+			
 			startOrt = t.getFound();
 
 			if (startOrt) {
-
 				trueCount++;
 			}
-
 		}
 
 		if (!zielOrt) {
-			Textfilereader t = new Textfilereader();
-			{
-				String inputString = auftrag.getZielOrt();
-				String inputTextFile = "src\\start\\plz.txt";
-				Boolean found = null;
-				t.compare(inputString, inputTextFile, found);
-				{
-					zielOrt = t.getFound();
-				}
-			}
-			if (zielOrt) {
-				trueCount++;
-			}
 
+			String inputString = auftrag.getZielOrt();
+			t.compare(inputString, inputTextFile);
+			zielOrt = t.getFound();
+
+		}
+		if (zielOrt) {
+			trueCount++;
 		}
 
 		for (int i = 0; i <= loopantwortKreditkartenAnbiete; i++) {// 30 x loop loopantwortKreditkartenAnbiete; anfang
@@ -568,6 +559,7 @@ public class Start {
 		if (trueCount == 6) { // wenn alles stimmt wird dies ausgeführt und weitergeleiten an....... zur Zeit
 								// Line 419
 			System.out.println("Die Prüfung ist Erfolgreich Abgschlossen und Ihren Auftrag wurde angenommen");
+			result.setStatus(Status.ausgeliehen);
 
 		}
 
@@ -581,18 +573,18 @@ public class Start {
 			if (!startDatum) {
 				System.out.println("Startdatum liegt in der Vergangenheit.");
 			}
-			if (!endDatum ) {
+			if (!endDatum) {
 				System.out.println("Enddatum liegt vor dem Startdatum.");
 			}
-			
+
 			if (!pruefungRueckantwortAntwortKreditkartenAnbieter) {
 				System.out
 						.println("Buchungsbestätigung von der Bank nicht erhalten. Bitte Kontaktieren Sie Ihre Bank.");
 			}
-			if (!startOrt ) {
+			if (!startOrt) {
 				System.out.println("Start Ort ist ausserhalb der Schweiz oder unbekannter Ort.");
 			}
-			if (!zielOrt ) {
+			if (!zielOrt) {
 				System.out.println("Ziel Ort ist ausserhalb der Schweiz oder unbekannter Ort.");
 			}
 
